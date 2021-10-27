@@ -4,8 +4,8 @@ import (
 	"testing"
 	"time"
 
+	"github.com/Damon-V79/act-transition-api/internal/mocks"
 	"github.com/golang/mock/gomock"
-	"github.com/ozonmp/omp-demo-api/internal/mocks"
 )
 
 func TestStart(t *testing.T) {
@@ -17,14 +17,14 @@ func TestStart(t *testing.T) {
 	repo.EXPECT().Lock(gomock.Any()).AnyTimes()
 
 	cfg := Config{
-		ChannelSize:   512,
-		ConsumerCount: 2,
-		ConsumeSize:   10,
+		ChannelSize:    512,
+		ConsumerCount:  2,
+		ConsumeSize:    10,
 		ConsumeTimeout: 10 * time.Second,
-		ProducerCount: 2,
-		WorkerCount:   2,
-		Repo:          repo,
-		Sender:        sender,
+		ProducerCount:  2,
+		WorkerCount:    2,
+		Repo:           repo,
+		Sender:         sender,
 	}
 
 	retranslator := NewRetranslator(cfg)

@@ -4,8 +4,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/ozonmp/omp-demo-api/internal/app/sender"
-	"github.com/ozonmp/omp-demo-api/internal/model"
+	"github.com/Damon-V79/act-transition-api/internal/app/sender"
+	"github.com/Damon-V79/act-transition-api/internal/model"
 
 	"github.com/gammazero/workerpool"
 )
@@ -20,7 +20,7 @@ type producer struct {
 	timeout time.Duration
 
 	sender sender.EventSender
-	events <-chan model.SubdomainEvent
+	events <-chan model.TransitionEvent
 
 	workerPool *workerpool.WorkerPool
 
@@ -32,7 +32,7 @@ type producer struct {
 func NewKafkaProducer(
 	n uint64,
 	sender sender.EventSender,
-	events <-chan model.SubdomainEvent,
+	events <-chan model.TransitionEvent,
 	workerPool *workerpool.WorkerPool,
 ) Producer {
 

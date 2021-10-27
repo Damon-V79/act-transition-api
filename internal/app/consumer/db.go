@@ -4,8 +4,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/ozonmp/omp-demo-api/internal/app/repo"
-	"github.com/ozonmp/omp-demo-api/internal/model"
+	"github.com/Damon-V79/act-transition-api/internal/app/repo"
+	"github.com/Damon-V79/act-transition-api/internal/model"
 )
 
 type Consumer interface {
@@ -15,7 +15,7 @@ type Consumer interface {
 
 type consumer struct {
 	n      uint64
-	events chan<- model.SubdomainEvent
+	events chan<- model.TransitionEvent
 
 	repo repo.EventRepo
 
@@ -28,7 +28,7 @@ type consumer struct {
 
 type Config struct {
 	n         uint64
-	events    chan<- model.SubdomainEvent
+	events    chan<- model.TransitionEvent
 	repo      repo.EventRepo
 	batchSize uint64
 	timeout   time.Duration
@@ -39,7 +39,7 @@ func NewDbConsumer(
 	batchSize uint64,
 	consumeTimeout time.Duration,
 	repo repo.EventRepo,
-	events chan<- model.SubdomainEvent) Consumer {
+	events chan<- model.TransitionEvent) Consumer {
 
 	wg := &sync.WaitGroup{}
 	done := make(chan bool)

@@ -1,4 +1,4 @@
-module github.com/ozonmp/omp-demo-api
+module github.com/Damon-V79/act-transition-api
 
 go 1.16
 
