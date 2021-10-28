@@ -1,7 +1,10 @@
 package model
 
 type Transition struct {
-	ID uint64
+	ID   uint64
+	Name string
+	From string
+	To   string
 }
 
 type EventType uint8

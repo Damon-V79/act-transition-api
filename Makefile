@@ -1,4 +1,10 @@
-.PHONY: all test lint tidy style cover
+GO_VERSION_SHORT:=$(shell echo `go version` | sed -E 's/.* go(.*) .*/\1/g')
+ifneq ("1.17","$(shell printf "$(GO_VERSION_SHORT)\n1.17" | sort -V | head -1)")
+$(error NEED GO VERSION >= 1.17. Found: $(GO_VERSION_SHORT))
+endif
+
+.PHONY: all test lint tidy style cover reqs
+
 all: build
 
 test:
@@ -19,5 +25,9 @@ style:
 cover:
 	go tool cover -html cover.out
 
+reqs:
+	go get -d github.com/golang/mock/mockgen@latest
+
 build:
-	go build -o bin/act-transition-retranslator cmd/act-transition-api/main.go
+	go mod download && \
+	  CGO_ENABLED=0 go build -o bin/act-transition-api cmd/act-transition-api/main.go

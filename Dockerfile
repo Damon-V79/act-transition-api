@@ -8,15 +8,13 @@ WORKDIR /home/${GITHUB_PATH}
 RUN make all
 
 
-FROM alpine:latest AS act-transition-retranslator
+FROM alpine:latest AS act-transition-api
 
 LABEL org.opencontainers.image.source https://${GITHUB_PATH}
 RUN apk --no-cache add ca-certificates
 WORKDIR /root/
 
-COPY --from=builder /home/${GITHUB_PATH}/bin/act-transition-retranslator .
+COPY --from=builder /home/${GITHUB_PATH}/bin/act-transition-api .
 
-COPY --from=builder /home/${GITHUB_PATH}/configs/config.yml .
-
-RUN chown root:root act-transition-retranslator
-CMD ["./act-transition-retranslator"]
+RUN chown root:root act-transition-api
+CMD ["./act-transition-api"]
