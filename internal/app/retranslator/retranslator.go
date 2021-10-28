@@ -1,19 +1,20 @@
 package retranslator
 
 import (
+	"context"
 	"time"
 
-	"github.com/ozonmp/omp-demo-api/internal/app/consumer"
-	"github.com/ozonmp/omp-demo-api/internal/app/producer"
-	"github.com/ozonmp/omp-demo-api/internal/app/repo"
-	"github.com/ozonmp/omp-demo-api/internal/app/sender"
-	"github.com/ozonmp/omp-demo-api/internal/model"
+	"github.com/Damon-V79/act-transition-api/internal/app/consumer"
+	"github.com/Damon-V79/act-transition-api/internal/app/producer"
+	"github.com/Damon-V79/act-transition-api/internal/app/repo"
+	"github.com/Damon-V79/act-transition-api/internal/app/sender"
+	"github.com/Damon-V79/act-transition-api/internal/model"
 
 	"github.com/gammazero/workerpool"
 )
 
 type Retranslator interface {
-	Start()
+	Start(ctx context.Context)
 	Close()
 }
 
@@ -32,14 +33,14 @@ type Config struct {
 }
 
 type retranslator struct {
-	events     chan model.SubdomainEvent
+	events     chan []model.TransitionEvent
 	consumer   consumer.Consumer
 	producer   producer.Producer
 	workerPool *workerpool.WorkerPool
 }
 
 func NewRetranslator(cfg Config) Retranslator {
-	events := make(chan model.SubdomainEvent, cfg.ChannelSize)
+	events := make(chan []model.TransitionEvent, cfg.ChannelSize)
 	workerPool := workerpool.New(cfg.WorkerCount)
 
 	consumer := consumer.NewDbConsumer(
@@ -52,6 +53,8 @@ func NewRetranslator(cfg Config) Retranslator {
 		cfg.ProducerCount,
 		cfg.Sender,
 		events,
+		repo.NewDbCleaner(cfg.Repo),
+		repo.NewDbUpdater(cfg.Repo),
 		workerPool)
 
 	return &retranslator{
@@ -62,9 +65,9 @@ func NewRetranslator(cfg Config) Retranslator {
 	}
 }
 
-func (r *retranslator) Start() {
-	r.producer.Start()
-	r.consumer.Start()
+func (r *retranslator) Start(ctx context.Context) {
+	r.producer.Start(ctx)
+	r.consumer.Start(ctx)
 }
 
 func (r *retranslator) Close() {

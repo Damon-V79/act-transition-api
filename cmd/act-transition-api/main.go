@@ -1,11 +1,12 @@
 package main
 
 import (
+	"context"
 	"os"
 	"os/signal"
 	"syscall"
 
-	"github.com/ozonmp/omp-demo-api/internal/app/retranslator"
+	"github.com/Damon-V79/act-transition-api/internal/app/retranslator"
 )
 
 func main() {
@@ -21,7 +22,8 @@ func main() {
 	}
 
 	retranslator := retranslator.NewRetranslator(cfg)
-	retranslator.Start()
+	ctx := context.Background()
+	retranslator.Start(ctx)
 
 	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
 

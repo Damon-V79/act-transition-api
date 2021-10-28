@@ -1,9 +1,11 @@
 package sender
 
 import (
-	"github.com/ozonmp/omp-demo-api/internal/model"
+	"context"
+
+	"github.com/Damon-V79/act-transition-api/internal/model"
 )
 
 type EventSender interface {
-	Send(subdomain *model.SubdomainEvent) error
+	Send(ctx context.Context, transition *model.TransitionEvent) error
 }
